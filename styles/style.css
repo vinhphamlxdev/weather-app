@@ -1,3 +1,4 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css");
 *,
 *:before,
 *:after {
@@ -25,6 +26,12 @@ textarea {
   outline: none;
 }
 
+:root {
+  --bg-card: #e8edf5;
+  --bg-dropdown: #e8edf5;
+  --border-card: rgba(22, 21, 21, 0.1);
+}
+
 img {
   -o-object-fit: cover;
      object-fit: cover;
@@ -40,6 +47,7 @@ button {
 :root {
   --white: #fff;
   --gray-blue-grey-blue-98: #f7f8fa;
+  --text-primary: #66768f;
 }
 
 body {
@@ -47,21 +55,111 @@ body {
   font-weight: 400;
   font-size: 16px;
   line-height: 1;
-  background-color: var(--gray-blue-grey-blue-98);
+  background-color: black;
   font-family: "Poppins", sans-serif;
+  color: var(--text-primary);
+}
+
+.has-scrollbar {
+  will-change: scroll-position;
+  scroll-behavior: smooth;
+  overflow: hidden overlay;
+}
+.has-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  visibility: hidden;
+}
+.has-scrollbar:hover::-webkit-scrollbar {
+  width: 4px;
+  visibility: visible;
+}
+.has-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  background: hsla(0, 0%, 7%, 0.75);
+}
+
+.wrapper-layout {
+  padding-left: 50px;
+  padding-right: 50px;
 }
 
 .app {
-  padding: 12px;
+  padding: 40px;
   height: 100%;
+  min-height: 100vh;
+}
+
+.header {
+  position: relative;
+  z-index: 999;
+}
+
+.header-user__dropdown {
+  background-color: var(--bg-dropdown);
+  border: 1px solid var(--border-card);
 }
 
 .main {
-  background-color: var(--white);
   border-radius: 12px;
   box-shadow: 0px 2px 5px 0px rgba(38, 51, 77, 0.03);
+  display: flex;
+  flex-direction: column;
+  background-color: #f9fbff;
 }
 
-.header-logo {
-  width: 80px;
+.forecast-temperature {
+  color: var(--text-primary);
+}
+
+.header-logo__text {
+  color: var(--text-primary);
+}
+
+.dark-mode__btn .dark-mode {
+  height: 22px;
+  width: 45px;
+  transform: scale(1.4);
+  transition: 0.5s ease-in-out;
+  background-color: rgba(22, 21, 21, 0.1);
+}
+.dark-mode__btn .dark-mode .spinner {
+  top: 50%;
+  transform: translateY(-50%);
+  left: calc(100% - 20px);
+  transition: 1s ease-in-out;
+}
+.dark-mode__btn .dark-mode.active .spinner {
+  right: calc(100% - 20px);
+  left: auto;
+  transition: 1s ease-in-out;
+}
+.dark-mode__btn .dark-mode.active {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.dropdown-list {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-card);
+}
+.dropdown-list .dropdown-item:hover {
+  background-color: #a2d2ff;
+}
+
+.dropdown-list.show {
+  display: block;
+}
+
+.card-forecast__item {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-card);
+}
+
+.header-logo__name {
+  font-family: "Bad Script", cursive;
+  font-weight: 600;
+  background: linear-gradient(90deg, #00dbde, #fc00ff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
 }/*# sourceMappingURL=style.css.map */

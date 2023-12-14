@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>weather app</title>
+    <link rel="icon" href="assets/logoweather.gif" />
     <link rel="stylesheet" href="./styles/style.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
@@ -14,13 +15,195 @@
   <body>
     <div class="app">
       <div class="main">
-        <header class="header w-full px-3 items-center flex h-20 bg-white">
-          <div class="header-logo">
-            <img src="./assets/logoweather.gif" alt="" />
+        <header
+          class="header w-full justify-between px-10 items-center flex h-20"
+        >
+          <div class="header-logo gap-x-2 flex items-center">
+            <div class="w-24 relative">
+              <img src="./assets/logoweather.gif" alt="" />
+              <!-- <div class="absolute header-logo__name">Dev Vinh Pham</div> -->
+            </div>
+            <!-- <span class="header-logo__text text-base font-medium"
+              >Weather Forecast</span> -->
+              <div class=" header-logo__name">Dev Vinh Pham</div>
+          </div>
+          <div class="header-user gap-x-7 flex  items-center">
+              <div class="header-user__dropdown cursor-pointer  relative w-[250px]  px-3 py-2 rounded-md">
+                <div class=" px-3 select-none current-selected  flex justify-start items-center">Select city</div>
+
+                <div class="absolute right-0 cursor-pointer -translate-x-2/4 -translate-y-2/4 top-2/4 ">
+                  <i class="bi bi-caret-down-fill leading-0"></i>
+                </div>
+
+               <div class="dropdown-list hidden   py-2 absolute top-[42px] h-[200px] has-scrollbar left-0 w-full rounded-md"> 
+               
+              </div>
+               
+              </div>
+            <div class="header-user__time flex items-center gap-x-2">
+              <div class="flex  items-center  text-2xl font-medium">
+                29 Dec
+              </div>
+              <div class="flex flex-col text-sm ">
+                <span>2023</span>
+                <span>Date</span>
+              </div>
+            </dic>
+          </div>
+          <div class="header-user-right flex items-center gap-x-2">
+            <div
+            class="flex dark-mode__btn items-center justify-center mx-2 transition-all duration-500"
+          >
+            <button
+              class="relative scale-125 h-[22px] w-11 rounded-full  dark-mode"
+            >
+              <i class="absolute  left-2 text-[10px] leading-[0] top-2/4 -translate-y-2/4 bi bi-sun-fill"></i>
+              <div class="absolute w-4 h-4  bg-white rounded-full top-2/4 -translate-y-2/4 left-[calc(100%-20px)] spinner "></div>
+              <i class="absolute  right-2 text-[10px] leading-[0] top-2/4 -translate-y-2/4 bi bi-moon-fill"></i>
+            </button>
+          </div>
           </div>
         </header>
-      </div>
+        <div class="main-home relative pt-10 pb-7">
+            <div class="wrapper-layout">
+            <div class="grid grid-cols-2 gap-x-5">
+           <div class="flex flex-col gap-y-7">  
+             <div class=" justify-start  flex-flex-col">
+              <h4 class="text-[80px] font-medium">Stormy</h4> 
+              <span class="text-4xl font-medium">with Heavy Rain</span>
+            </div>
+            <div class=" text-sm w-[400px] font-medium">Variable clouds with snow showers. High 11f.
+                  Winds E at 10 to 20 mqh. Chance of snow 50%. 
+                  Snow accumutations less than one inch.
+            </div>
+            <div class="flex items-start gap-x-7">
+              <div class="flex flex-col ">
+               <div class="relative"> 
+                <span class="text-[60px] font-medium">12</span>
+                <span class="absolute top-[12px] right-[62px] text-base font-medium">o</span>
+              </div>
+              <div class="clound-content flex flex-col gap-y-1">
+               <div class="flex items-center gap-x-2">
+                <div class="text-sm font-normal">Real Feel:</div>
+                <div class="relative text-base font-medium">
+                  18
+                  <span class="absolute text-xs top-0">o</span>
+                </div>
+               </div>
+               <div class="flex items-center gap-x-2">
+                <div class="text-sm font-normal">Wind:</div>
+                <div class="relative text-base font-medium">
+                  5-8 km/h
+                </div>
+               </div>
+               <div class="flex items-center gap-x-2">
+                <div class="text-sm font-normal">Pressure:</div>
+                <div class="relative text-base font-medium">
+                  1000MB
+                </div>
+               </div>
+               <div class="flex items-center gap-x-2">
+                <div class="text-sm font-normal">Humidity:</div>
+                <div class="relative text-base font-medium">
+                  51%
+                </div>
+               </div>
+              </div>
+              </div>
+              <div class="flex flex-col gap-y-2">
+               <div class="cloud-img w-20"> 
+                <img src="./assets/cloudsun.png" alt="">
+              </div>
+              <div class="clound-content flex flex-col gap-y-1">
+                <div class="flex items-center gap-x-2">
+                 <div class="text-sm font-normal">Sunrise:</div>
+                 <div class="text-base sunrise-value font-medium">
+                  6:02 AM
+                 </div>
+                </div>
+                <div class="flex items-center gap-x-2">
+                 <div class="text-sm font-normal">Sunset:</div>
+                 <div class="text-base sunset-value font-medium">
+                  9:18 PM
+                 </div>
+                </div>
+           
+             
+               </div>
+              </div>
+            </div>
+            </div>
+           <div class="flex flex-col">
+              <div class="flex items-end flex-col">
+             <div class="flex flex-col justify-end">
+                  <div class="relative">
+                    <span class="forecast-temperature text-[100px] font-medium">
+                      27
+                  </span>
+                  <span class="absolute top-[18px] -right-[10px] text-4xl">o</span>
+                </div>
+                <div class="flex flex-col gap-y-1">
+                  <span class="text-sm font-medium">WIND: WSW 6 MPH</span>
+                  <span class="text-sm font-medium">UV INDEX: 0 OF 10</span>
+                  <span class="text-xs font-medium">Ho CHI MINH</span>
+                </div>
+             </div>
+              </div>
+              <div class="forecast-onweek mt-4">
+                <div class="grid grid-cols-3 gap-x-2">
+                    <div class="card-forecast__item flex justify-between  p-3 rounded-md">
+                      <div class="flex justify-center flex-col">
+                        <span class="text-base whitespace-nowrap font-medium day-time">Monday</span>
+                        <span class="text-sm whitespace-nowrap font-normal">Mostly Sunny</span>
+                      </div>
+                      <div class="flex items-center gap-y-2 flex-col">
+                          <div class="relative">
+                            <img class="cloud-image w-10" src="./assets/cloudsun.png" alt="">
+                          </div>
+                        <div class="relative">
+                          <span class="text-2xl font-medium">18</span>
+                          <span class="absolute top-0 text-xs -top-[7px]">o</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-forecast__item flex justify-between  p-3 rounded-md">
+                      <div class="flex justify-center flex-col">
+                        <span class="text-base whitespace-nowrap font-medium day-time">Monday</span>
+                        <span class="text-sm whitespace-nowrap font-normal">Mostly Sunny</span>
+                      </div>
+                      <div class="flex items-center gap-y-2 flex-col">
+                          <div class="relative">
+                            <img class="cloud-image w-10" src="./assets/sun.png" alt="">
+                          </div>
+                        <div class="relative">
+                          <span class="text-2xl font-medium">18</span>
+                          <span class="absolute top-0 text-xs -top-[7px]">o</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-forecast__item flex justify-between  p-3 rounded-md">
+                      <div class="flex justify-center flex-col">
+                        <span class="text-base whitespace-nowrap font-medium day-time">Monday</span>
+                        <span class="text-sm whitespace-nowrap font-normal">Mostly Sunny</span>
+                      </div>
+                      <div class="flex items-center gap-y-2 flex-col">
+                          <div class="relative">
+                            <img class="cloud-image w-10" src="./assets/cloudrain.png" alt="">
+                          </div>
+                        <div class="relative">
+                          <span class="text-2xl font-medium">18</span>
+                          <span class="absolute top-0 text-xs -top-[7px]">o</span>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+           </div>
+          </div>
+        </div>
+        </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="./main.js"></script>
   </body>
 </html>
