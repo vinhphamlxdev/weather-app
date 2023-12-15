@@ -75,7 +75,7 @@ body {
 }
 .has-scrollbar::-webkit-scrollbar-thumb {
   border-radius: 12px;
-  background: hsla(0, 0%, 7%, 0.75);
+  background: var(--border-card);
 }
 
 .wrapper-layout {

@@ -21,11 +21,10 @@
           <div class="header-logo gap-x-2 flex items-center">
             <div class="w-24 relative">
               <img src="./assets/logoweather.gif" alt="" />
-              <!-- <div class="absolute header-logo__name">Dev Vinh Pham</div> -->
             </div>
             <!-- <span class="header-logo__text text-base font-medium"
               >Weather Forecast</span> -->
-              <div class=" header-logo__name">Dev Vinh Pham</div>
+              <!-- <div class=" header-logo__name">Dev Vinh Pham</div> -->
           </div>
           <div class="header-user gap-x-7 flex  items-center">
               <div class="header-user__dropdown cursor-pointer  relative w-[250px]  px-3 py-2 rounded-md">
@@ -41,11 +40,12 @@
                
               </div>
             <div class="header-user__time flex items-center gap-x-2">
-              <div class="flex  items-center  text-2xl font-medium">
-                29 Dec
+              <div class="flex items-center  gap-x-1">
+               <span class="current-day text-xl font-medium">29</span>
+               <span class="current-month text-xl font-medium">DEC</span>
               </div>
               <div class="flex flex-col text-sm ">
-                <span>2023</span>
+                <span class="current-year">2023</span>
                 <span>Date</span>
               </div>
             </dic>
@@ -78,33 +78,38 @@
             </div>
             <div class="flex items-start gap-x-7">
               <div class="flex flex-col ">
-               <div class="relative"> 
-                <span class="text-[60px] font-medium">12</span>
-                <span class="absolute top-[12px] right-[62px] text-base font-medium">o</span>
+               <div class="relative inline-block"> 
+                <div class="text-[60px] font-medium forecase-temperature">12
+                </div>
+                <span class="absolute top-[12px] left-[70px] text-xl text-base font-medium">o</span>
               </div>
               <div class="clound-content flex flex-col gap-y-1">
                <div class="flex items-center gap-x-2">
+                <img class="w-5" src="./assets/hot.png" alt="">
                 <div class="text-sm font-normal">Real Feel:</div>
                 <div class="relative text-base font-medium">
-                  18
-                  <span class="absolute text-xs top-0">o</span>
+                 <p class="temp__feels-like"> 18</p>
                 </div>
                </div>
                <div class="flex items-center gap-x-2">
+                <img class="w-5" src="./assets/wind.png" alt="">
                 <div class="text-sm font-normal">Wind:</div>
-                <div class="relative text-base font-medium">
+                <div class="relative wind-speed text-base font-medium">
                   5-8 km/h
                 </div>
                </div>
                <div class="flex items-center gap-x-2">
-                <div class="text-sm font-normal">Pressure:</div>
-                <div class="relative text-base font-medium">
+                <img class="w-5" src="./assets/presure.png" alt="">
+                <div class="text-sm font-normal pressure">Pressure:</div>
+                <div class="relative forecast-pressure text-base font-medium">
                   1000MB
                 </div>
                </div>
                <div class="flex items-center gap-x-2">
+                <img class="w-5" src="./assets/humidity.png" alt="">
+                  
                 <div class="text-sm font-normal">Humidity:</div>
-                <div class="relative text-base font-medium">
+                <div class="relative forecast-humidity text-base font-medium">
                   51%
                 </div>
                </div>
@@ -114,14 +119,17 @@
                <div class="cloud-img w-20"> 
                 <img src="./assets/cloudsun.png" alt="">
               </div>
-              <div class="clound-content flex flex-col gap-y-1">
+              <div class="clound-content flex flex-col gap-y-2">
                 <div class="flex items-center gap-x-2">
+                <img class="w-5" src="./assets/sunrise.png" alt="">
+
                  <div class="text-sm font-normal">Sunrise:</div>
                  <div class="text-base sunrise-value font-medium">
                   6:02 AM
                  </div>
                 </div>
                 <div class="flex items-center gap-x-2">
+                <img class="w-5" src="./assets/sunset.png" alt="">
                  <div class="text-sm font-normal">Sunset:</div>
                  <div class="text-base sunset-value font-medium">
                   9:18 PM
@@ -155,6 +163,22 @@
                       <div class="flex justify-center flex-col">
                         <span class="text-base whitespace-nowrap font-medium day-time">Monday</span>
                         <span class="text-sm whitespace-nowrap font-normal">Mostly Sunny</span>
+                        <div class="text-sm whitespace-nowrap gap-x-2 font-normal flex items-center">
+                          <span>Min:</span>
+                          <div class="relative flex gap-x-2">
+                            <span>12</span>
+                            <span>C</span>
+                            <span class="absolute top-[-1px] right-[11px] text-xs">o</span>
+                          </div>
+                        </div>
+                        <div class="text-sm whitespace-nowrap gap-x-2 font-normal flex items-center">
+                          <span>Max:</span>
+                          <div class="relative flex gap-x-2">
+                            <span>18</span>
+                            <span>C</span>
+                            <span class="absolute top-[-1px] right-[11px] text-xs">o</span>
+                          </div>
+                        </div>
                       </div>
                       <div class="flex items-center gap-y-2 flex-col">
                           <div class="relative">
@@ -166,36 +190,8 @@
                         </div>
                       </div>
                     </div>
-                    <div class="card-forecast__item flex justify-between  p-3 rounded-md">
-                      <div class="flex justify-center flex-col">
-                        <span class="text-base whitespace-nowrap font-medium day-time">Monday</span>
-                        <span class="text-sm whitespace-nowrap font-normal">Mostly Sunny</span>
-                      </div>
-                      <div class="flex items-center gap-y-2 flex-col">
-                          <div class="relative">
-                            <img class="cloud-image w-10" src="./assets/sun.png" alt="">
-                          </div>
-                        <div class="relative">
-                          <span class="text-2xl font-medium">18</span>
-                          <span class="absolute top-0 text-xs -top-[7px]">o</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="card-forecast__item flex justify-between  p-3 rounded-md">
-                      <div class="flex justify-center flex-col">
-                        <span class="text-base whitespace-nowrap font-medium day-time">Monday</span>
-                        <span class="text-sm whitespace-nowrap font-normal">Mostly Sunny</span>
-                      </div>
-                      <div class="flex items-center gap-y-2 flex-col">
-                          <div class="relative">
-                            <img class="cloud-image w-10" src="./assets/cloudrain.png" alt="">
-                          </div>
-                        <div class="relative">
-                          <span class="text-2xl font-medium">18</span>
-                          <span class="absolute top-0 text-xs -top-[7px]">o</span>
-                        </div>
-                      </div>
-                    </div>
+                 
+                  
                 </div>
               </div>
            </div>
