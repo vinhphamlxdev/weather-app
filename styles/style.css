@@ -26,12 +26,6 @@ textarea {
   outline: none;
 }
 
-:root {
-  --bg-card: #e8edf5;
-  --bg-dropdown: #e8edf5;
-  --border-card: rgba(22, 21, 21, 0.1);
-}
-
 img {
   -o-object-fit: cover;
      object-fit: cover;
@@ -46,8 +40,10 @@ button {
 
 :root {
   --white: #fff;
+  --text-primary: #fff;
+  --bg-card: rgba(255, 255, 255, 0.25);
+  --border-card: rgba(255, 255, 255, 0.5);
   --gray-blue-grey-blue-98: #f7f8fa;
-  --text-primary: #66768f;
 }
 
 body {
@@ -55,9 +51,19 @@ body {
   font-weight: 400;
   font-size: 16px;
   line-height: 1;
-  background-color: black;
+  background-color: var(--gray-blue-grey-blue-98);
   font-family: "Poppins", sans-serif;
   color: var(--text-primary);
+}
+
+.noty_has_timeout.noty_has_progressbar .noty_progressbar {
+  background-color: #e63946;
+}
+
+.noty_body {
+  color: #e76f51;
+  font-size: 16px;
+  padding: 14px;
 }
 
 .has-scrollbar {
@@ -95,7 +101,7 @@ body {
 }
 
 .header-user__dropdown {
-  background-color: var(--bg-dropdown);
+  background-color: var(--bg-card);
   border: 1px solid var(--border-card);
 }
 
@@ -104,7 +110,7 @@ body {
   box-shadow: 0px 2px 5px 0px rgba(38, 51, 77, 0.03);
   display: flex;
   flex-direction: column;
-  background-color: #f9fbff;
+  background: linear-gradient(243deg, #9065bc 0%, rgba(255, 0, 108, 0.38) 100%);
 }
 
 .forecast-temperature {
@@ -142,7 +148,7 @@ body {
   border: 1px solid var(--border-card);
 }
 .dropdown-list .dropdown-item:hover {
-  background-color: #a2d2ff;
+  background-color: #fb6f92;
 }
 
 .dropdown-list.show {

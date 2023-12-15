@@ -12,20 +12,12 @@ const app = {
   isShowDropdown: false,
   isLoading: false,
   currentCityName: "Ho Chi Minh",
-  addressData: [],
-  forecastOnWeek: {},
-  currentForecast: {},
-  coordinate: {
-    lat: "",
-    lon: "",
-  },
-
   getAllAddress: async function () {
     try {
       const response = await axios.get(`${API_PROVINCES}`);
       if (response.status === 200) {
         this.addressData = response.data;
-        this.renderDropdownItem();
+        this.renderDropdownItem(response.data);
       }
     } catch (error) {
       console.error("Error when fetching data:", error);
@@ -40,13 +32,19 @@ const app = {
       );
 
       if (response && response?.data.cod === 200) {
-        this.currentForecast = response.data;
-        this.renderCurrentForeCast();
+        this.renderCurrentForeCast(response.data);
         this.isLoading = false;
         loadingElm.classList.remove("show");
       }
     } catch (error) {
-      console.error("Error when fetching data:", error);
+      if (error && error?.response?.data) {
+      }
+      console.error("Error when fetching data:", error.response.data);
+      new Noty({
+        text: `${error.response.data.message}`,
+        timeout: 2000,
+        layout: "topRight",
+      }).show();
     } finally {
       this.isLoading = false;
       loadingElm.classList.remove("show");
@@ -132,9 +130,14 @@ const app = {
           icon: "./assets/mist.png",
           desc: "Misty conditions. Reduced visibility with a damp atmosphere.",
         };
+      default:
+        return {
+          icon: "./assets/clear-day.png",
+          desc: "Clear sky during the day. Bright sunlight illuminates the surroundings.",
+        };
     }
   },
-  renderCurrentForeCast: function () {
+  renderCurrentForeCast: function (data) {
     let sunriseElm = $(".sunrise-value");
     let sunsetElm = $(".sunset-value");
     let windSpeedElm = $(".wind-speed");
@@ -162,7 +165,7 @@ const app = {
       },
       visibility,
       wind: { speed },
-    } = this.currentForecast;
+    } = data;
     const { icon, main: mainStatus, description } = weather[0];
     const statusData = this.getStatusWeather(icon);
     weatherIconStatusElm.src = statusData.icon;
@@ -203,8 +206,8 @@ const app = {
     humidityElm.textContent = `${humidity}%`;
   },
 
-  renderDropdownItem: function () {
-    let newAddressArrs = this.addressData.map((address) => {
+  renderDropdownItem: function (addressData = []) {
+    let newAddressArrs = addressData.map((address) => {
       return {
         code: address.code,
         name: address.name,
@@ -223,15 +226,80 @@ const app = {
   getForecastOnWeek: async function () {
     try {
       const response = await axios.get(
-        `http://api.openweathermap.org/data/2.5/forecast?q=ho chi minh&cnt=6&appid=${API_KEY}`
+        `${BASE_API_WEATHER}/data/2.5/forecast?q=${this.currentCityName}&cnt=6&appid=${API_KEY}`
       );
-      if (response && response?.status === 200) {
+      if (response && response?.data) {
         this.forecastOnWeek = response.data;
-        console.log("forecastOnWeek:", response);
+        console.log("forcase on week", this.forecastOnWeek);
+        this.renderForcastOnWeek(response.data);
       }
     } catch (error) {
       console.error("Error when fetching data:", error);
     }
+  },
+  renderForcastOnWeek: (data = {}) => {
+    let forecastListElm = $(".forecast-onweek__list");
+    const listForecase = data?.list;
+
+    let html = listForecase.map((item, index) => {
+      const {
+        dt,
+        main: {
+          temp,
+          feels_like,
+          temp_min,
+          temp_max,
+          pressure,
+          sea_level,
+          grnd_level,
+          humidity,
+          temp_kf,
+        },
+        weather,
+        wind: { speed, deg },
+        dt_txt,
+      } = item;
+      const weatherData = weather[0];
+      const { main: mainStatus, description, icon } = weatherData;
+      const tempAvg = app.convertTemperature(temp);
+      const minTemp = app.convertTemperature(temp_min);
+      const maxTemp = app.convertTemperature(temp_max);
+      const statusData = app.getStatusWeather(icon);
+      return `
+      <div class="card-forecast__item flex justify-between  p-3 rounded-md">
+      <div class="flex justify-center flex-col">
+        <span class="text-base whitespace-nowrap font-medium day-time">Monday</span>
+        <span class="text-sm whitespace-nowrap font-normal">${description}</span>
+        <div class="text-sm whitespace-nowrap gap-x-2 font-normal flex items-center">
+          <span>Min:</span>
+          <div class="relative flex gap-x-2">
+            <span>${minTemp}</span>
+            <span>C</span>
+            <span class="absolute top-[-1px] right-[11px] text-xs">o</span>
+          </div>
+        </div>
+        <div class="text-sm whitespace-nowrap gap-x-2 font-normal flex items-center">
+          <span>Max:</span>
+          <div class="relative flex gap-x-2">
+            <span>${maxTemp}</span>
+            <span>C</span>
+            <span class="absolute top-[-1px] right-[11px] text-xs">o</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-y-2 flex-col">
+          <div class="relative">
+            <img class="cloud-image w-10" src="${statusData?.icon}" alt="">
+          </div>
+        <div class="relative">
+          <span class="text-2xl font-medium">${tempAvg}</span>
+          <span class="absolute top-0 text-xs -top-[7px]">o</span>
+        </div>
+      </div>
+    </div>
+          `;
+    });
+    forecastListElm.innerHTML = html.join("");
   },
   handleEvent: function () {
     const _this = this;
@@ -256,10 +324,17 @@ const app = {
 
   start: function () {
     this.getAllAddress();
-    this.getForecastOnWeek();
-    this.getForecastByCityName();
     this.getCurrentDate();
     this.handleEvent();
+    Promise.allSettled([this.getForecastOnWeek(), this.getForecastByCityName()])
+      .then((result) => {
+        const currentForcast = result[0];
+        const forecaseOnWeek = result[1];
+        console.log(currentForcast, forecaseOnWeek);
+      })
+      .catch((err) => {
+        console.log("co loi:", err);
+      });
   },
 };
 app.start();

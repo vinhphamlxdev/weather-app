@@ -23,11 +23,7 @@ textarea {
   background-color: transparent;
   outline: none;
 }
-:root {
-  --bg-card: #e8edf5;
-  --bg-dropdown: #e8edf5;
-  --border-card: rgba(22, 21, 21, 0.1);
-}
+
 img {
   object-fit: cover;
 }
@@ -39,18 +35,27 @@ button {
 }
 :root {
   --white: #fff;
+  --text-primary: #fff;
+  --bg-card: rgba(255, 255, 255, 0.25);
+  --border-card: rgba(255, 255, 255, 0.5);
   --gray-blue-grey-blue-98: #f7f8fa;
-  --text-primary: #66768f;
 }
 body {
   min-height: 100vh;
   font-weight: 400;
   font-size: 16px;
   line-height: 1;
-  // background-color: var(--gray-blue-grey-blue-98);
-  background-color: black;
+  background-color: var(--gray-blue-grey-blue-98);
   font-family: "Poppins", sans-serif;
   color: var(--text-primary);
+}
+.noty_has_timeout.noty_has_progressbar .noty_progressbar {
+  background-color: #e63946;
+}
+.noty_body {
+  color: #e76f51;
+  font-size: 16px;
+  padding: 14px;
 }
 .has-scrollbar {
   will-change: scroll-position;
@@ -86,7 +91,7 @@ body {
   z-index: 99;
 }
 .header-user__dropdown {
-  background-color: var(--bg-dropdown);
+  background-color: var(--bg-card);
   border: 1px solid var(--border-card);
 }
 
@@ -96,7 +101,8 @@ body {
   // background-color: rgb(30, 30, 30);
   display: flex;
   flex-direction: column;
-  background-color: #f9fbff;
+  // background-color: #f9fbff;
+  background: linear-gradient(243deg, #9065bc 0%, rgba(255, 0, 108, 0.38) 100%);
 }
 .forecast-temperature {
   color: var(--text-primary);
@@ -132,7 +138,7 @@ body {
   border: 1px solid var(--border-card);
   .dropdown-item {
     &:hover {
-      background-color: #a2d2ff;
+      background-color: #fb6f92;
     }
   }
 }

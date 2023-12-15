@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>weather app</title>
     <link rel="icon" href="assets/logoweather.gif" />
+    <link rel="stylesheet" href="./assets/noty.css">
+    <link rel="stylesheet" href="./assets/noty.css">
     <link rel="stylesheet" href="./styles/style.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
@@ -26,9 +28,7 @@
             <div class="w-24 relative">
               <img src="./assets/logoweather.gif" alt="" />
             </div>
-            <!-- <span class="header-logo__text text-base font-medium"
-              >Weather Forecast</span> -->
-              <!-- <div class=" header-logo__name">Dev Vinh Pham</div> -->
+              <div class=" header-logo__name">Dev Vinh Pham</div>
           </div>
           <div class="header-user gap-x-7 flex  items-center">
               <div class="header-user__dropdown cursor-pointer  relative w-[250px]  px-3 py-2 rounded-md">
@@ -162,8 +162,8 @@
              </div>
               </div>
               <div class="forecast-onweek mt-4">
-                <div class="grid grid-cols-3 gap-x-2">
-                    <div class="card-forecast__item flex justify-between  p-3 rounded-md">
+                <div class="grid grid-cols-3 forecast-onweek__list gap-x-2 gap-y-2">
+                    <!-- <div class="card-forecast__item flex justify-between  p-3 rounded-md">
                       <div class="flex justify-center flex-col">
                         <span class="text-base whitespace-nowrap font-medium day-time">Monday</span>
                         <span class="text-sm whitespace-nowrap font-normal">Mostly Sunny</span>
@@ -193,7 +193,7 @@
                           <span class="absolute top-0 text-xs -top-[7px]">o</span>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                  
                   
                 </div>
@@ -203,6 +203,7 @@
         </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/noty@3.1.4"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="./main.js"></script>
   </body>
