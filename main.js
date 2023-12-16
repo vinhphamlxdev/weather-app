@@ -1,4 +1,4 @@
-const API_KEY = `a139e22324488946b4cfba798c50544d`;
+const API_KEY = `60836d7502891317b3d0942b4f1d416b`;
 const BASE_API_WEATHER = `http://api.openweathermap.org`;
 const API_PROVINCES = `https://provinces.open-api.vn/api/?depth=2`;
 const $ = document.querySelector.bind(document);
@@ -22,6 +22,15 @@ const app = {
     } catch (error) {
       console.error("Error when fetching data:", error);
     }
+  },
+  getCoordinateByCityName: async function () {
+    try {
+      const response = await axios.get(
+        `${BASE_API_WEATHER}/geo/1.0/direct?q=quảng ninh,VN&appid=${API_KEY}`
+      );
+      if (response.status === 200) {
+      }
+    } catch (error) {}
   },
   getForecastByCityName: async function () {
     try {
@@ -259,6 +268,11 @@ const app = {
         wind: { speed, deg },
         dt_txt,
       } = item;
+      const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+      const date = new Date(dt_txt);
+      const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "long" });
+      console.log(dayOfWeek);
       const weatherData = weather[0];
       const { main: mainStatus, description, icon } = weatherData;
       const tempAvg = app.convertTemperature(temp);
@@ -268,7 +282,7 @@ const app = {
       return `
       <div class="card-forecast__item flex justify-between  p-3 rounded-md">
       <div class="flex justify-center flex-col">
-        <span class="text-base whitespace-nowrap font-medium day-time">Monday</span>
+        <span class="text-base whitespace-nowrap font-medium day-time">${dayOfWeek}</span>
         <span class="text-sm whitespace-nowrap font-normal">${description}</span>
         <div class="text-sm whitespace-nowrap gap-x-2 font-normal flex items-center">
           <span>Min:</span>
@@ -301,13 +315,28 @@ const app = {
     });
     forecastListElm.innerHTML = html.join("");
   },
+  updateWeatherData: async function () {
+    try {
+      await Promise.allSettled([
+        this.getForecastByCityName(),
+        this.getForecastOnWeek(),
+      ]);
+    } catch (error) {
+      console.log("err when fetching data");
+    }
+  },
   handleEvent: function () {
+    let darkModeElm = $(".darkmode__btn");
+    let darkModeBtnElm = $(".darkmode");
     const _this = this;
     dropdownList.onclick = async function (event) {
       const cityNode = event.target.closest(".dropdown-item");
       currentSelected.textContent = cityNode.textContent;
-      _this.currentCityName = cityNode.textContent;
-      await _this.getForecastByCityName();
+      let newCityName = cityNode.textContent
+        .replace(/(Thành phố|Tỉnh) /g, "")
+        .trim();
+      _this.currentCityName = newCityName;
+      await _this.updateWeatherData();
     };
     dropdownMenu.onclick = function (event) {
       event.stopPropagation();
@@ -320,21 +349,17 @@ const app = {
         dropdownList.classList.remove("show");
       }
     };
+    darkModeElm.onclick = function (event) {
+      darkModeBtnElm.classList.toggle("active");
+      document.body.classList.toggle("dark-theme");
+    };
   },
 
   start: function () {
     this.getAllAddress();
     this.getCurrentDate();
     this.handleEvent();
-    Promise.allSettled([this.getForecastOnWeek(), this.getForecastByCityName()])
-      .then((result) => {
-        const currentForcast = result[0];
-        const forecaseOnWeek = result[1];
-        console.log(currentForcast, forecaseOnWeek);
-      })
-      .catch((err) => {
-        console.log("co loi:", err);
-      });
+    this.updateWeatherData();
   },
 };
 app.start();
