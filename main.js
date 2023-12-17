@@ -183,7 +183,7 @@ const app = {
     weatherShortDescElm.textContent = description;
     //Temperature
     //convert kelvin to celsius
-    const currentTempCelsius = this.convertTemperature(temp);
+    const currentTempCelsius = Math.floor(temp);
     temperatureElm.textContent = `${currentTempCelsius}`;
     //sunrise and sunset
     const sunriseDate = new Date(sunrise * 1000);
@@ -195,7 +195,7 @@ const app = {
     sunriseElm.textContent = `${sunriseHours}:${sunriseMinutes} AM`;
     sunsetElm.textContent = `${sunsetHours}:${sunsetMinutes} PM`;
     //feels like
-    const feelsLikeCelsius = this.convertTemperature(feels_like?.day);
+    const feelsLikeCelsius = Math.floor(feels_like);
     tempFeelsLikeElm.textContent = `${feelsLikeCelsius} °C`;
     if (feelsLikeCelsius >= 28) {
       realFellIconElm.src = "./assets/hot.png";
@@ -232,7 +232,7 @@ const app = {
   getForecastOnWeek: async function (lat = 10.7758439, lon = 106.7017555) {
     try {
       const response = await axios.get(
-        `${BASE_API_WEATHER}/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&appid=${API_KEY}`
+        `${BASE_API_WEATHER}/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&&units=metric&appid=${API_KEY}`
       );
       if (response && response?.data) {
         console.log("forcase on week", response.data);
@@ -247,18 +247,25 @@ const app = {
 
   updateWeatherForecast: async function () {
     try {
+      this.isLoading = true;
+      loadingElm.classList.add("show");
       const coordinateRes = await this.getCoordinateByCityName();
       if (
         coordinateRes &&
         coordinateRes.data &&
         coordinateRes.data.length > 0
       ) {
+        this.isLoading = false;
+        loadingElm.classList.remove("show");
         const { lat, lon } = coordinateRes.data[0];
         console.log("coordinateRes", coordinateRes);
         await this.getForecastOnWeek(lat, lon);
       }
     } catch (error) {
       console.error("err when fetching data:", error);
+    } finally {
+      this.isLoading = false;
+      loadingElm.classList.remove("show");
     }
   },
 
@@ -273,7 +280,6 @@ const app = {
         .replace(/(Thành phố|Tỉnh) /g, "")
         .trim();
       _this.currentCityName = newCityName;
-      console.log(_this.currentCityName);
       await _this.updateWeatherForecast();
     };
     dropdownMenu.onclick = function (event) {
@@ -295,29 +301,39 @@ const app = {
 
   renderForcastOnWeek: (data = []) => {
     let forecastListElm = $(".forecast-onweek__list");
-    console.log(data);
-    let html = data.map((item, index) => {
-      const { humidity, pressure, sunrise } = item;
-      const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-      const date = new Date(dt_txt);
-      const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "long" });
-      console.log(dayOfWeek);
-      const weatherData = weather[0];
-      const { main: mainStatus, description, icon } = weatherData;
-      const tempAvg = app.convertTemperature(temp);
-      const minTemp = app.convertTemperature(temp_min);
-      const maxTemp = app.convertTemperature(temp_max);
-      const statusData = app.getStatusWeather(icon);
-      return `
+    console.log("forecast list:", data);
+    let html = data
+      .filter((el, index) => index > 0 && index < 7)
+      .map((item, index) => {
+        const {
+          dt,
+          sunrise,
+          sunset,
+          temp: { min: tempMin, max: tempMax, day: tempDay },
+          feels_like: { day: feelLikeDay },
+          pressure,
+          humidity,
+          wind_speed,
+          weather,
+        } = item;
+        const weatherData = weather[0];
+        const { main: mainStatus, description, icon } = weatherData;
+        const minTempVal = Math.floor(tempMin);
+        const maxTempVal = Math.floor(tempMax);
+        const tempAvg = Math.floor((tempMax + tempMin) / 2);
+        const statusData = app.getStatusWeather(icon);
+        const dayname = new Date(dt * 1000).toLocaleDateString("en", {
+          weekday: "long",
+        });
+        return `
       <div class="card-forecast__item flex justify-between  p-3 rounded-md">
       <div class="flex justify-center flex-col">
-        <span class="text-base whitespace-nowrap font-medium day-time">${dayOfWeek}</span>
+        <span class="text-base whitespace-nowrap font-medium day-time">${dayname}</span>
         <span class="text-sm whitespace-nowrap font-normal">${description}</span>
         <div class="text-sm whitespace-nowrap gap-x-2 font-normal flex items-center">
           <span>Min:</span>
           <div class="relative flex gap-x-2">
-            <span>${minTemp}</span>
+            <span>${minTempVal}</span>
             <span>C</span>
             <span class="absolute top-[-1px] right-[11px] text-xs">o</span>
           </div>
@@ -325,7 +341,7 @@ const app = {
         <div class="text-sm whitespace-nowrap gap-x-2 font-normal flex items-center">
           <span>Max:</span>
           <div class="relative flex gap-x-2">
-            <span>${maxTemp}</span>
+            <span>${maxTempVal}</span>
             <span>C</span>
             <span class="absolute top-[-1px] right-[11px] text-xs">o</span>
           </div>
@@ -342,7 +358,7 @@ const app = {
       </div>
     </div>
           `;
-    });
+      });
     forecastListElm.innerHTML = html.join("");
   },
   handleEvent: function () {
@@ -379,6 +395,7 @@ const app = {
     this.getAllAddress();
     this.getCurrentDate();
     this.handleEvent();
+    this.updateWeatherForecast();
   },
 };
 app.start();
