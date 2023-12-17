@@ -16,7 +16,7 @@ const app = {
   getAllAddress: async function () {
     try {
       const response = await axios.get(`${API_PROVINCES}`);
-      if (response.status === 200) {
+      if (response && response?.data.length > 0) {
         this.addressData = response.data;
         this.renderDropdownItem(response.data);
       }
@@ -34,33 +34,7 @@ const app = {
       console.log("err when fetching data:", error);
     }
   },
-  // getForecastByCityName: async function () {
-  //   try {
-  //     this.isLoading = true;
-  //     loadingElm.classList.add("show");
-  //     const response = await axios.get(
-  //       `${BASE_API_WEATHER}/data/2.5/weather?q=${this.currentCityName}&appid=${API_KEY}`
-  //     );
 
-  //     if (response && response?.data.cod === 200) {
-  //       this.renderCurrentForeCast(response.data);
-  //       this.isLoading = false;
-  //       loadingElm.classList.remove("show");
-  //     }
-  //   } catch (error) {
-  //     if (error && error?.response?.data) {
-  //     }
-  //     console.error("Error when fetching data:", error.response.data);
-  //     new Noty({
-  //       text: `${error.response.data.message}`,
-  //       timeout: 2000,
-  //       layout: "topRight",
-  //     }).show();
-  //   } finally {
-  //     this.isLoading = false;
-  //     loadingElm.classList.remove("show");
-  //   }
-  // },
   formatNumber: function (number) {
     return number < 10 ? `0${number}` : `${number}`;
   },
@@ -202,6 +176,7 @@ const app = {
     } else {
       realFellIconElm.src = "./assets/cold.png";
     }
+
     //wind speed
     const windSpeedKmPerHour = wind_speed * 3.6;
     const windSpeed = windSpeedKmPerHour.toFixed(2);
@@ -234,11 +209,12 @@ const app = {
       const response = await axios.get(
         `${BASE_API_WEATHER}/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&&units=metric&appid=${API_KEY}`
       );
-      if (response && response?.data) {
-        console.log("forcase on week", response.data);
-        console.log("forecastCurrent:", response?.data?.current);
+      if (response && response?.data && response.data?.daily?.length > 0) {
+        console.log("response:", response.data?.daily?.length > 0);
         this.renderCurrentForeCast(response?.data?.current);
         this.renderForcastOnWeek(response?.data?.daily);
+      } else {
+        console.log("co loi");
       }
     } catch (error) {
       console.error("Error when fetching data:", error);
