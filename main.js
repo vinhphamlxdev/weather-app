@@ -12,6 +12,7 @@ const app = {
   isShowDropdown: false,
   isLoading: false,
   currentCityName: "Ho Chi Minh",
+
   getAllAddress: async function () {
     try {
       const response = await axios.get(`${API_PROVINCES}`);
@@ -26,39 +27,40 @@ const app = {
   getCoordinateByCityName: async function () {
     try {
       const response = await axios.get(
-        `${BASE_API_WEATHER}/geo/1.0/direct?q=quảng ninh,VN&appid=${API_KEY}`
+        `${BASE_API_WEATHER}/geo/1.0/direct?q=${this.currentCityName},VN&appid=${API_KEY}`
       );
-      if (response.status === 200) {
-      }
-    } catch (error) {}
-  },
-  getForecastByCityName: async function () {
-    try {
-      this.isLoading = true;
-      loadingElm.classList.add("show");
-      const response = await axios.get(
-        `${BASE_API_WEATHER}/data/2.5/weather?q=${this.currentCityName}&appid=${API_KEY}`
-      );
-
-      if (response && response?.data.cod === 200) {
-        this.renderCurrentForeCast(response.data);
-        this.isLoading = false;
-        loadingElm.classList.remove("show");
-      }
+      return response;
     } catch (error) {
-      if (error && error?.response?.data) {
-      }
-      console.error("Error when fetching data:", error.response.data);
-      new Noty({
-        text: `${error.response.data.message}`,
-        timeout: 2000,
-        layout: "topRight",
-      }).show();
-    } finally {
-      this.isLoading = false;
-      loadingElm.classList.remove("show");
+      console.log("err when fetching data:", error);
     }
   },
+  // getForecastByCityName: async function () {
+  //   try {
+  //     this.isLoading = true;
+  //     loadingElm.classList.add("show");
+  //     const response = await axios.get(
+  //       `${BASE_API_WEATHER}/data/2.5/weather?q=${this.currentCityName}&appid=${API_KEY}`
+  //     );
+
+  //     if (response && response?.data.cod === 200) {
+  //       this.renderCurrentForeCast(response.data);
+  //       this.isLoading = false;
+  //       loadingElm.classList.remove("show");
+  //     }
+  //   } catch (error) {
+  //     if (error && error?.response?.data) {
+  //     }
+  //     console.error("Error when fetching data:", error.response.data);
+  //     new Noty({
+  //       text: `${error.response.data.message}`,
+  //       timeout: 2000,
+  //       layout: "topRight",
+  //     }).show();
+  //   } finally {
+  //     this.isLoading = false;
+  //     loadingElm.classList.remove("show");
+  //   }
+  // },
   formatNumber: function (number) {
     return number < 10 ? `0${number}` : `${number}`;
   },
@@ -160,20 +162,15 @@ const app = {
     let weatherLongDescElm = $(".weather__long-description");
     let realFellIconElm = $(".real-feel-img");
     const {
-      sys,
+      dt,
+      sunrise,
+      sunset,
+      temp,
+      feels_like,
+      pressure,
+      humidity,
+      wind_speed,
       weather,
-      wind,
-      main: {
-        temp,
-        feels_like,
-        temp_min,
-        temp_max,
-        pressure,
-        humidity,
-        sea_level,
-      },
-      visibility,
-      wind: { speed },
     } = data;
     const { icon, main: mainStatus, description } = weather[0];
     const statusData = this.getStatusWeather(icon);
@@ -189,8 +186,8 @@ const app = {
     const currentTempCelsius = this.convertTemperature(temp);
     temperatureElm.textContent = `${currentTempCelsius}`;
     //sunrise and sunset
-    const sunriseDate = new Date(sys?.sunrise * 1000);
-    const sunsetDate = new Date(sys?.sunset * 1000);
+    const sunriseDate = new Date(sunrise * 1000);
+    const sunsetDate = new Date(sunset * 1000);
     const sunriseHours = this.formatNumber(sunriseDate.getHours());
     const sunriseMinutes = this.formatNumber(sunriseDate.getMinutes());
     const sunsetHours = this.formatNumber(sunsetDate?.getHours());
@@ -198,7 +195,7 @@ const app = {
     sunriseElm.textContent = `${sunriseHours}:${sunriseMinutes} AM`;
     sunsetElm.textContent = `${sunsetHours}:${sunsetMinutes} PM`;
     //feels like
-    const feelsLikeCelsius = this.convertTemperature(feels_like);
+    const feelsLikeCelsius = this.convertTemperature(feels_like?.day);
     tempFeelsLikeElm.textContent = `${feelsLikeCelsius} °C`;
     if (feelsLikeCelsius >= 28) {
       realFellIconElm.src = "./assets/hot.png";
@@ -206,7 +203,7 @@ const app = {
       realFellIconElm.src = "./assets/cold.png";
     }
     //wind speed
-    const windSpeedKmPerHour = wind.speed * 3.6;
+    const windSpeedKmPerHour = wind_speed * 3.6;
     const windSpeed = windSpeedKmPerHour.toFixed(2);
     windSpeedElm.textContent = `${windSpeed} Km/h`;
     //Pressure
@@ -232,42 +229,75 @@ const app = {
     dropdownList.innerHTML = html.join("");
   },
 
-  getForecastOnWeek: async function () {
+  getForecastOnWeek: async function (lat = 10.7758439, lon = 106.7017555) {
     try {
       const response = await axios.get(
-        `${BASE_API_WEATHER}/data/2.5/forecast?q=${this.currentCityName}&cnt=6&appid=${API_KEY}`
+        `${BASE_API_WEATHER}/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&appid=${API_KEY}`
       );
       if (response && response?.data) {
-        this.forecastOnWeek = response.data;
-        console.log("forcase on week", this.forecastOnWeek);
-        this.renderForcastOnWeek(response.data);
+        console.log("forcase on week", response.data);
+        console.log("forecastCurrent:", response?.data?.current);
+        this.renderCurrentForeCast(response?.data?.current);
+        this.renderForcastOnWeek(response?.data?.daily);
       }
     } catch (error) {
       console.error("Error when fetching data:", error);
     }
   },
-  renderForcastOnWeek: (data = {}) => {
-    let forecastListElm = $(".forecast-onweek__list");
-    const listForecase = data?.list;
 
-    let html = listForecase.map((item, index) => {
-      const {
-        dt,
-        main: {
-          temp,
-          feels_like,
-          temp_min,
-          temp_max,
-          pressure,
-          sea_level,
-          grnd_level,
-          humidity,
-          temp_kf,
-        },
-        weather,
-        wind: { speed, deg },
-        dt_txt,
-      } = item;
+  updateWeatherForecast: async function () {
+    try {
+      const coordinateRes = await this.getCoordinateByCityName();
+      if (
+        coordinateRes &&
+        coordinateRes.data &&
+        coordinateRes.data.length > 0
+      ) {
+        const { lat, lon } = coordinateRes.data[0];
+        console.log("coordinateRes", coordinateRes);
+        await this.getForecastOnWeek(lat, lon);
+      }
+    } catch (error) {
+      console.error("err when fetching data:", error);
+    }
+  },
+
+  handleEvent: function () {
+    let darkModeElm = $(".darkmode__btn");
+    let darkModeBtnElm = $(".darkmode");
+    const _this = this;
+    dropdownList.onclick = async function (event) {
+      const cityNode = event.target.closest(".dropdown-item");
+      currentSelected.textContent = cityNode.textContent;
+      let newCityName = cityNode.textContent
+        .replace(/(Thành phố|Tỉnh) /g, "")
+        .trim();
+      _this.currentCityName = newCityName;
+      console.log(_this.currentCityName);
+      await _this.updateWeatherForecast();
+    };
+    dropdownMenu.onclick = function (event) {
+      event.stopPropagation();
+      _this.isShowDropdown = !_this.isShowDropdown;
+      dropdownList.classList.toggle("show", _this.isShowDropdown);
+    };
+    document.onclick = function (event) {
+      const targetElm = event.target;
+      if (!dropdownMenu.contains(targetElm)) {
+        dropdownList.classList.remove("show");
+      }
+    };
+    darkModeElm.onclick = function (event) {
+      darkModeBtnElm.classList.toggle("active");
+      document.body.classList.toggle("dark-theme");
+    };
+  },
+
+  renderForcastOnWeek: (data = []) => {
+    let forecastListElm = $(".forecast-onweek__list");
+    console.log(data);
+    let html = data.map((item, index) => {
+      const { humidity, pressure, sunrise } = item;
       const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
       const date = new Date(dt_txt);
@@ -315,16 +345,6 @@ const app = {
     });
     forecastListElm.innerHTML = html.join("");
   },
-  updateWeatherData: async function () {
-    try {
-      await Promise.allSettled([
-        this.getForecastByCityName(),
-        this.getForecastOnWeek(),
-      ]);
-    } catch (error) {
-      console.log("err when fetching data");
-    }
-  },
   handleEvent: function () {
     let darkModeElm = $(".darkmode__btn");
     let darkModeBtnElm = $(".darkmode");
@@ -336,7 +356,7 @@ const app = {
         .replace(/(Thành phố|Tỉnh) /g, "")
         .trim();
       _this.currentCityName = newCityName;
-      await _this.updateWeatherData();
+      await _this.updateWeatherForecast();
     };
     dropdownMenu.onclick = function (event) {
       event.stopPropagation();
@@ -359,7 +379,6 @@ const app = {
     this.getAllAddress();
     this.getCurrentDate();
     this.handleEvent();
-    this.updateWeatherData();
   },
 };
 app.start();
