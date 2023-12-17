@@ -213,8 +213,6 @@ const app = {
         console.log("response:", response.data?.daily?.length > 0);
         this.renderCurrentForeCast(response?.data?.current);
         this.renderForcastOnWeek(response?.data?.daily);
-      } else {
-        console.log("co loi");
       }
     } catch (error) {
       console.error("Error when fetching data:", error);
