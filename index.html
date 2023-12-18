@@ -109,14 +109,9 @@
                   1000MB
                 </div>
                </div>
-               <div class="flex items-center gap-x-2">
-                <img class="w-5" src="./assets/humidity.png" alt="">
-                  
-                <div class="text-sm font-normal">Humidity:</div>
-                <div class="relative forecast-humidity text-base font-medium">
-                  51%
-                </div>
-               </div>
+
+            
+
               </div>
               </div>
               <div class="flex flex-col gap-y-2">
@@ -139,7 +134,14 @@
                   9:18 PM
                  </div>
                 </div>
-           
+                <div class="flex items-center gap-x-2">
+                  <img class="w-5" src="./assets/humidity.png" alt="">
+                    
+                  <div class="text-sm font-normal">Humidity:</div>
+                  <div class="relative forecast-humidity text-base font-medium">
+                    51%
+                  </div>
+                 </div>
              
                </div>
               </div>
@@ -148,17 +150,27 @@
            <div class="flex flex-col">
               <div class="flex items-end flex-col">
              <div class="flex flex-col justify-end">
-                  <div class="relative">
-                    <span class="forecast-temperature text-[100px] font-medium">
+                  <div class="relative inline-block w-[140px]">
+                    <span class="absolute text-4xl right-[-22px] top-5 ">c</span>
+                    <span class="absolute text-xl right-0 top-0">o</span>
+                    <span class="forecast-temperature leading-[120px] text-[100px] font-medium">
                       27
                   </span>
-                  <span class="absolute top-[18px] -right-[10px] text-4xl">o</span>
+                  <!-- <span class="absolute top-[18px] -right-[10px] text-4xl">o</span> -->
                 </div>
-                <div class="flex flex-col gap-y-1">
-                  <span class="text-sm font-medium">WIND: WSW 6 MPH</span>
-                  <span class="text-sm font-medium">UV INDEX: 0 OF 10</span>
-                  <span class="text-xs font-medium">Ho CHI MINH</span>
-                </div>
+            <div class="flex flex-col">
+                  <div class="text-base">14th Mar 22</div>
+                  <div class="flex items-center gap-x-3">
+                    <span class="text-4xl upercase font-medium">Ho CHI MINH</span>
+                  </div>
+                  <div class="flex items-center gap-x-3">
+                    <span class="text-sm">Monday</span>
+                    <div class="flex text-xl gap-x-2 items-center">
+                      <span>10:40</span>
+                      <span>AM</span>
+                    </div>
+                  </div>
+            </div>
              </div>
               </div>
               <div class="forecast-onweek mt-4">

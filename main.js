@@ -12,6 +12,8 @@ const app = {
   isShowDropdown: false,
   isLoading: false,
   currentCityName: "Ho Chi Minh",
+  hcmLatitudeVal: 10.7758439,
+  hcmLongitudeVal: 106.7017555,
 
   getAllAddress: async function () {
     try {
@@ -204,14 +206,17 @@ const app = {
     dropdownList.innerHTML = html.join("");
   },
 
-  getForecastOnWeek: async function (lat = 10.7758439, lon = 106.7017555) {
+  getForecastOnWeek: async function (
+    lat = this.hcmLatitudeVal,
+    lon = this.hcmLongitudeVal
+  ) {
     try {
       const response = await axios.get(
         `${BASE_API_WEATHER}/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&&units=metric&appid=${API_KEY}`
       );
       if (response && response?.data && response.data?.daily?.length > 0) {
-        console.log("response:", response.data?.daily?.length > 0);
         this.renderCurrentForeCast(response?.data?.current);
+        console.log(response.data.current);
         this.renderForcastOnWeek(response?.data?.daily);
       }
     } catch (error) {
@@ -224,6 +229,7 @@ const app = {
       this.isLoading = true;
       loadingElm.classList.add("show");
       const coordinateRes = await this.getCoordinateByCityName();
+      console.log(coordinateRes);
       if (
         coordinateRes &&
         coordinateRes.data &&
@@ -234,6 +240,12 @@ const app = {
         const { lat, lon } = coordinateRes.data[0];
         console.log("coordinateRes", coordinateRes);
         await this.getForecastOnWeek(lat, lon);
+      } else {
+        new Noty({
+          text: `Location not found 🙁`,
+          timeout: 2000,
+          layout: "topRight",
+        }).show();
       }
     } catch (error) {
       console.error("err when fetching data:", error);
