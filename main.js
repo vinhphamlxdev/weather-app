@@ -11,7 +11,7 @@ const loadingElm = $(".loading");
 const app = {
   isShowDropdown: false,
   isLoading: false,
-  currentCityName: "Ho Chi Minh",
+  currentCityName: "HỒ CHÍ MINH",
   hcmLatitudeVal: 10.7758439,
   hcmLongitudeVal: 106.7017555,
 
@@ -64,9 +64,9 @@ const app = {
       "Nov",
       "Dec",
     ];
-    const monthName = monthNames[currentMonth];
+    const monthName = monthNames[currentMonth - 1];
     currentDayElm.textContent = currentDay;
-    currentMonth.textContent = monthName;
+    currentMonthElm.textContent = monthName;
     currentYearElm.textContext = currentDate.getFullYear();
   },
   getStatusWeather: function (iconCode) {
@@ -124,19 +124,39 @@ const app = {
         };
     }
   },
+  getCurrentTime: function () {
+    let now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    hours = hours % 12;
+    console.log(hours);
+    hours = hours ? hours : 12;
+    let ampm = hours >= 12 ? "PM" : "AM";
+    let currentTime =
+      hours.toString().padStart(2, "0") +
+      ":" +
+      minutes.toString().padStart(2, "0") +
+      " " +
+      ampm;
+    return currentTime;
+  },
   renderCurrentForeCast: function (data) {
     let sunriseElm = $(".sunrise-value");
     let sunsetElm = $(".sunset-value");
     let windSpeedElm = $(".wind-speed");
     let humidityElm = $(".forecast-humidity");
     let tempFeelsLikeElm = $(".temp__feels-like");
-    let temperatureElm = $(".forecase-temperature");
+    let temperatureElm = $(".forecast-temperature");
     let pressureElm = $(".forecast-pressure");
     let weatherIconStatusElm = $(".weather-status");
     let mainStatusElm = $(".main-status");
     let weatherShortDescElm = $(".weather__short-description");
     let weatherLongDescElm = $(".weather__long-description");
     let realFellIconElm = $(".real-feel-img");
+    let todayElm = $(".forecast-current__day");
+    let currentLocationName = $(".current-location-name");
+    let currentTime = $(".forecast-currentTime");
+    currentTime.textContent = this.getCurrentTime();
     const {
       dt,
       sunrise,
@@ -150,6 +170,11 @@ const app = {
     } = data;
     const { icon, main: mainStatus, description } = weather[0];
     const statusData = this.getStatusWeather(icon);
+    //location name
+    currentLocationName.textContent = this.currentCityName;
+    //get current dayname
+    todayElm.textContent = this.getDayName(dt);
+    //
     weatherIconStatusElm.src = statusData.icon;
     //long description
     weatherLongDescElm.textContent = statusData.desc;
@@ -198,9 +223,9 @@ const app = {
         phoneCode: address.phone_code,
       };
     });
-    let html = newAddressArrs.map((item, index) => {
+    let html = newAddressArrs.map((item) => {
       return `
-          <div data-cityname="${item.name}" class="dropdown-item cursor-pointer px-3 py-2 flex justify-start items-center">${item.name}</div>
+          <div class="dropdown-item">${item.name}</div>
           `;
     });
     dropdownList.innerHTML = html.join("");
@@ -215,8 +240,8 @@ const app = {
         `${BASE_API_WEATHER}/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&&units=metric&appid=${API_KEY}`
       );
       if (response && response?.data && response.data?.daily?.length > 0) {
+        console.log(response.data.daily);
         this.renderCurrentForeCast(response?.data?.current);
-        console.log(response.data.current);
         this.renderForcastOnWeek(response?.data?.daily);
       }
     } catch (error) {
@@ -229,7 +254,6 @@ const app = {
       this.isLoading = true;
       loadingElm.classList.add("show");
       const coordinateRes = await this.getCoordinateByCityName();
-      console.log(coordinateRes);
       if (
         coordinateRes &&
         coordinateRes.data &&
@@ -238,7 +262,6 @@ const app = {
         this.isLoading = false;
         loadingElm.classList.remove("show");
         const { lat, lon } = coordinateRes.data[0];
-        console.log("coordinateRes", coordinateRes);
         await this.getForecastOnWeek(lat, lon);
       } else {
         new Noty({
@@ -284,10 +307,14 @@ const app = {
       document.body.classList.toggle("dark-theme");
     };
   },
-
+  getDayName: function (dt) {
+    const dayName = new Date(dt * 1000).toLocaleDateString("en", {
+      weekday: "long",
+    });
+    return dayName;
+  },
   renderForcastOnWeek: (data = []) => {
     let forecastListElm = $(".forecast-onweek__list");
-    console.log("forecast list:", data);
     let html = data
       .filter((el, index) => index > 0 && index < 7)
       .map((item, index) => {
@@ -308,9 +335,7 @@ const app = {
         const maxTempVal = Math.floor(tempMax);
         const tempAvg = Math.floor((tempMax + tempMin) / 2);
         const statusData = app.getStatusWeather(icon);
-        const dayname = new Date(dt * 1000).toLocaleDateString("en", {
-          weekday: "long",
-        });
+        const dayname = app.getDayName(dt);
         return `
       <div class="card-forecast__item flex justify-between  p-3 rounded-md">
       <div class="flex justify-center flex-col">

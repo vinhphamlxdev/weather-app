@@ -36,7 +36,7 @@ button {
 :root {
   --white: #fff;
   --text-primary: #fff;
-  --bg-card: rgba(255, 255, 255, 0.25);
+  --bg-card: rgba(255, 255, 255, 0.3);
   --border-card: rgba(255, 255, 255, 0.5);
   --gray-blue-grey-blue-98: #f7f8fa;
   --darkmode-btn: #db3898;
@@ -148,6 +148,11 @@ body {
   // border: 1px solid var(--border-card);
   box-shadow: var(--border-card);
   .dropdown-item {
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 8px 12px;
     &:hover {
       background-color: var(--dropdown-item-hover);
     }
