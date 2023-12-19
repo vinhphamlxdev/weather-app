@@ -145,9 +145,9 @@ const app = {
     let now = new Date();
     let hours = now.getHours();
     let minutes = now.getMinutes();
+    let ampm = hours >= 12 ? "PM" : "AM";
     hours = hours % 12;
     hours = hours ? hours : 12;
-    let ampm = hours >= 12 ? "PM" : "AM";
     let currentTime =
       hours.toString().padStart(2, "0") +
       ":" +
@@ -296,35 +296,6 @@ const app = {
     }
   },
 
-  handleEvent: function () {
-    let darkModeElm = $(".darkmode__btn");
-    let darkModeBtnElm = $(".darkmode");
-    const _this = this;
-    dropdownList.onclick = async function (event) {
-      const cityNode = event.target.closest(".dropdown-item");
-      currentSelected.textContent = cityNode.textContent;
-      let newCityName = cityNode.textContent
-        .replace(/(Thành phố|Tỉnh) /g, "")
-        .trim();
-      _this.currentCityName = newCityName;
-      await _this.updateWeatherForecast();
-    };
-    dropdownMenu.onclick = function (event) {
-      event.stopPropagation();
-      _this.isShowDropdown = !_this.isShowDropdown;
-      dropdownList.classList.toggle("show", _this.isShowDropdown);
-    };
-    document.onclick = function (event) {
-      const targetElm = event.target;
-      if (!dropdownMenu.contains(targetElm)) {
-        dropdownList.classList.remove("show");
-      }
-    };
-    darkModeElm.onclick = function (event) {
-      darkModeBtnElm.classList.toggle("active");
-      document.body.classList.toggle("dark-theme");
-    };
-  },
   getDayName: function (dt) {
     const dayName = new Date(dt * 1000).toLocaleDateString("en", {
       weekday: "long",
