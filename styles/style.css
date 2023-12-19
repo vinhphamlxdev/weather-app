@@ -252,4 +252,19 @@ body {
     height: 72px;
     opacity: 0;
   }
+}
+.temperature-unit {
+  top: 20px;
+  right: -50px;
+  font-size: 2.25rem; /* 36px */
+  line-height: 2.5rem; /* 40px */
+  position: absolute;
+}
+
+.temperature-unit-o {
+  top: 8px;
+  right: -26px;
+  font-size: 1.875rem; /* 30px */
+  line-height: 2.25rem; /* 36px */
+  position: absolute;
 }/*# sourceMappingURL=style.css.map */

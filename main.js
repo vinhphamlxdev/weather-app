@@ -78,26 +78,43 @@ const app = {
         };
       case "01n":
         return {
-          icon: "./assets/clear-night.png",
+          icon: "./assets/clear-sky.png",
           desc: "Clear sky at night. Twinkling stars and possibly a moonlit night.",
         };
       case "02d":
-      case "02n":
-      case "03d":
-      case "03n":
-      case "04d":
-      case "04n":
         return {
           icon: "./assets/clouds.png",
           desc: "Partly to mostly cloudy sky. Varying degrees of cloud cover.",
         };
+      case "02n":
+        return {
+          icon: "./assets/few-cloud-night.png",
+          desc: "Clear sky, twinkling stars, and a chance of moonlight.",
+        };
+      case "03d":
+      case "03n":
+        return {
+          icon: "./assets/clouds.png",
+          desc: "Scattered clouds. Pleasant weather with occasional cloud cover.",
+        };
+      case "04n":
+      case "04d":
+        return {
+          icon: "./assets/two-cloud.png",
+          desc: "Broken clouds. Intermittent cloud cover with breaks of clear sky.",
+        };
+
       case "09d":
       case "09n":
-      case "10d":
-      case "10n":
         return {
           icon: "./assets/rain.png",
           desc: "Rainy weather. Expect rainfall, ranging from light to heavy.",
+        };
+      case "10d":
+      case "10n":
+        return {
+          icon: "./assets/sunrain.png",
+          desc: "Rain expected. Prepare for wet conditions.",
         };
       case "11d":
       case "11n":
@@ -129,7 +146,6 @@ const app = {
     let hours = now.getHours();
     let minutes = now.getMinutes();
     hours = hours % 12;
-    console.log(hours);
     hours = hours ? hours : 12;
     let ampm = hours >= 12 ? "PM" : "AM";
     let currentTime =
@@ -183,9 +199,12 @@ const app = {
     //description
     weatherShortDescElm.textContent = description;
     //Temperature
-    //convert kelvin to celsius
-    const currentTempCelsius = Math.floor(temp);
-    temperatureElm.textContent = `${currentTempCelsius}`;
+    const currentTemp = Math.floor(temp);
+    temperatureElm.textContent = `${currentTemp}`;
+    temperatureElm.innerHTML += ` 
+    <span class="temperature-unit">c</span>
+    <span class="temperature-unit-o">o</span>
+    `;
     //sunrise and sunset
     const sunriseDate = new Date(sunrise * 1000);
     const sunsetDate = new Date(sunset * 1000);
@@ -240,7 +259,6 @@ const app = {
         `${BASE_API_WEATHER}/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&&units=metric&appid=${API_KEY}`
       );
       if (response && response?.data && response.data?.daily?.length > 0) {
-        console.log(response.data.daily);
         this.renderCurrentForeCast(response?.data?.current);
         this.renderForcastOnWeek(response?.data?.daily);
       }
@@ -333,7 +351,7 @@ const app = {
         const { main: mainStatus, description, icon } = weatherData;
         const minTempVal = Math.floor(tempMin);
         const maxTempVal = Math.floor(tempMax);
-        const tempAvg = Math.floor((tempMax + tempMin) / 2);
+        const tempAvg = Math.floor(tempDay);
         const statusData = app.getStatusWeather(icon);
         const dayname = app.getDayName(dt);
         return `
