@@ -1,5 +1,6 @@
 const API_KEY = `60836d7502891317b3d0942b4f1d416b`;
-const BASE_API_WEATHER = `http://api.openweathermap.org`;
+const BASE_API_WEATHER = `https://api.openweathermap.org`;
+// const BASE_API_WEATHER = `http://api.openweathermap.org`;
 const API_PROVINCES = `https://provinces.open-api.vn/api/?depth=2`;
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
