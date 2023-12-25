@@ -15,6 +15,7 @@ const app = {
   currentCityName: "HỒ CHÍ MINH",
   hcmLatitudeVal: 10.7758439,
   hcmLongitudeVal: 106.7017555,
+  isDarkmode: false,
 
   getAllAddress: async function () {
     try {
@@ -66,9 +67,9 @@ const app = {
       "Dec",
     ];
     const monthName = monthNames[currentMonth - 1];
-    currentDayElm.textContent = currentDay;
-    currentMonthElm.textContent = monthName;
-    currentYearElm.textContext = currentDate.getFullYear();
+    currentDayElm.innerText = currentDay;
+    currentMonthElm.innerText = monthName;
+    currentYearElm.textContent = currentDate.getFullYear();
   },
   getStatusWeather: function (iconCode) {
     switch (iconCode) {
@@ -173,7 +174,7 @@ const app = {
     let todayElm = $(".forecast-current__day");
     let currentLocationName = $(".current-location-name");
     let currentTime = $(".forecast-currentTime");
-    currentTime.textContent = this.getCurrentTime();
+    currentTime.innerText = this.getCurrentTime();
     const {
       dt,
       sunrise,
@@ -188,20 +189,20 @@ const app = {
     const { icon, main: mainStatus, description } = weather[0];
     const statusData = this.getStatusWeather(icon);
     //location name
-    currentLocationName.textContent = this.currentCityName;
+    currentLocationName.innerText = this.currentCityName;
     //get current dayname
-    todayElm.textContent = this.getDayName(dt);
+    todayElm.innerText = this.getDayName(dt);
     //
     weatherIconStatusElm.src = statusData.icon;
     //long description
-    weatherLongDescElm.textContent = statusData.desc;
+    weatherLongDescElm.innerText = statusData.desc;
     //main status
-    mainStatusElm.textContent = mainStatus;
+    mainStatusElm.innerText = mainStatus;
     //description
-    weatherShortDescElm.textContent = description;
+    weatherShortDescElm.innerText = description;
     //Temperature
     const currentTemp = Math.floor(temp);
-    temperatureElm.textContent = `${currentTemp}`;
+    temperatureElm.innerText = `${currentTemp}`;
     temperatureElm.innerHTML += ` 
     <span class="temperature-unit">c</span>
     <span class="temperature-unit-o">o</span>
@@ -213,11 +214,11 @@ const app = {
     const sunriseMinutes = this.formatNumber(sunriseDate.getMinutes());
     const sunsetHours = this.formatNumber(sunsetDate?.getHours());
     const sunsetMinutes = this.formatNumber(sunsetDate?.getMinutes());
-    sunriseElm.textContent = `${sunriseHours}:${sunriseMinutes} AM`;
-    sunsetElm.textContent = `${sunsetHours}:${sunsetMinutes} PM`;
+    sunriseElm.innerText = `${sunriseHours}:${sunriseMinutes} AM`;
+    sunsetElm.innerText = `${sunsetHours}:${sunsetMinutes} PM`;
     //feels like
     const feelsLikeCelsius = Math.floor(feels_like);
-    tempFeelsLikeElm.textContent = `${feelsLikeCelsius} °C`;
+    tempFeelsLikeElm.innerText = `${feelsLikeCelsius} °C`;
     if (feelsLikeCelsius >= 28) {
       realFellIconElm.src = "./assets/hot.png";
     } else {
@@ -227,11 +228,11 @@ const app = {
     //wind speed
     const windSpeedKmPerHour = wind_speed * 3.6;
     const windSpeed = windSpeedKmPerHour.toFixed(2);
-    windSpeedElm.textContent = `${windSpeed} Km/h`;
+    windSpeedElm.innerText = `${windSpeed} Km/h`;
     //Pressure
-    pressureElm.textContent = `${pressure} MB`;
+    pressureElm.innerText = `${pressure} MB`;
     //Humidity
-    humidityElm.textContent = `${humidity}%`;
+    humidityElm.innerText = `${humidity}%`;
   },
 
   renderDropdownItem: function (addressData = []) {
@@ -312,7 +313,7 @@ const app = {
           dt,
           sunrise,
           sunset,
-          temp: { min: tempMin, max: tempMax, day: tempDay },
+          temp: { min: tempMin, max: tempMax, day: tempDay, night: tempNight },
           feels_like: { day: feelLikeDay },
           pressure,
           humidity,
@@ -323,9 +324,11 @@ const app = {
         const { main: mainStatus, description, icon } = weatherData;
         const minTempVal = Math.floor(tempMin);
         const maxTempVal = Math.floor(tempMax);
-        const tempAvg = Math.floor(tempDay);
+        const tempDayVal = Math.floor(tempDay);
+        const tempNightVal = Math.floor(tempNight);
         const statusData = app.getStatusWeather(icon);
         const dayname = app.getDayName(dt);
+
         return `
       <div class="card-forecast__item flex justify-between  p-3 rounded-md">
       <div class="flex justify-center flex-col">
@@ -353,7 +356,7 @@ const app = {
             <img class="cloud-image w-10" src="${statusData?.icon}" alt="">
           </div>
         <div class="relative">
-          <span class="text-2xl font-medium">${tempAvg}</span>
+          <span class="text-2xl font-medium">${tempDayVal}</span>
           <span class="absolute top-0 text-xs -top-[7px]">o</span>
         </div>
       </div>
@@ -361,15 +364,14 @@ const app = {
           `;
       });
     forecastListElm.innerHTML = html.join("");
+    app.handleDarkmode();
   },
   handleEvent: function () {
-    let darkModeElm = $(".darkmode__btn");
-    let darkModeBtnElm = $(".darkmode");
     const _this = this;
     dropdownList.onclick = async function (event) {
       const cityNode = event.target.closest(".dropdown-item");
-      currentSelected.textContent = cityNode.textContent;
-      let newCityName = cityNode.textContent
+      currentSelected.innerText = cityNode.innerText;
+      let newCityName = cityNode.innerText
         .replace(/(Thành phố|Tỉnh) /g, "")
         .trim();
       _this.currentCityName = newCityName;
@@ -386,9 +388,20 @@ const app = {
         dropdownList.classList.remove("show");
       }
     };
+  },
+  handleDarkmode: function () {
+    const darkModeElm = $(".darkmode__btn");
+    const darkModeBtnElm = $(".darkmode");
     darkModeElm.onclick = function (event) {
-      darkModeBtnElm.classList.toggle("active");
-      document.body.classList.toggle("dark-theme");
+      if (!app.isDarkmode) {
+        app.isDarkmode = true;
+        darkModeBtnElm.classList.add("active");
+        document.body.classList.add("dark-theme");
+      } else {
+        app.isDarkmode = false;
+        darkModeBtnElm.classList.remove("active");
+        document.body.classList.remove("dark-theme");
+      }
     };
   },
 
@@ -397,6 +410,7 @@ const app = {
     this.getCurrentDate();
     this.handleEvent();
     this.updateWeatherForecast();
+    this.handleDarkmode();
   },
 };
 app.start();
