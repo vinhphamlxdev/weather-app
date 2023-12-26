@@ -27,25 +27,7 @@ const app = {
       console.error("Error when fetching data:", error);
     }
   },
-  getCurrentLocation: function () {
-    const currLocation = navigator.geolocation;
-    console.log(currLocation);
-    if (currLocation) {
-      currLocation.getCurrentPosition(
-        function (position) {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-          app.currLatitudeVal = latitude;
-          app.currLongitudeVal = longitude;
-        },
-        function (error) {
-          console.error("err", error.message);
-        }
-      );
-    } else {
-      console.log("Trình duyệt không hỗ trợ định vị.");
-    }
-  },
+
   getCoordinateByCityName: async function () {
     try {
       const response = await axios.get(
@@ -429,7 +411,6 @@ const app = {
     this.handleEvent();
     this.updateWeatherForecast();
     this.handleDarkmode();
-    this.getCurrentLocation();
   },
 };
 app.start();
