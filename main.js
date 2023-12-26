@@ -12,8 +12,8 @@ const app = {
   isShowDropdown: false,
   isLoading: false,
   currentCityName: "HỒ CHÍ MINH",
-  hcmLatitudeVal: 10.7758439,
-  hcmLongitudeVal: 106.7017555,
+  currLatitudeVal: 10.7758439,
+  currLongitudeVal: 106.7017555,
   isDarkmode: false,
 
   getAllAddress: async function () {
@@ -25,6 +25,25 @@ const app = {
       }
     } catch (error) {
       console.error("Error when fetching data:", error);
+    }
+  },
+  getCurrentLocation: function () {
+    const currLocation = navigator.geolocation;
+    console.log(currLocation);
+    if (currLocation) {
+      currLocation.getCurrentPosition(
+        function (position) {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          app.currLatitudeVal = latitude;
+          app.currLongitudeVal = longitude;
+        },
+        function (error) {
+          console.error("err", error.message);
+        }
+      );
+    } else {
+      console.log("Trình duyệt không hỗ trợ định vị.");
     }
   },
   getCoordinateByCityName: async function () {
@@ -200,7 +219,7 @@ const app = {
     //description
     weatherShortDescElm.innerText = description;
     //Temperature
-    const currentTemp = Math.floor(temp);
+    const currentTemp = Math.round(temp);
     temperatureElm.innerText = `${currentTemp}`;
     temperatureElm.innerHTML += ` 
     <span class="temperature-unit">c</span>
@@ -216,7 +235,7 @@ const app = {
     sunriseElm.innerText = `${sunriseHours}:${sunriseMinutes} AM`;
     sunsetElm.innerText = `${sunsetHours}:${sunsetMinutes} PM`;
     //feels like
-    const feelsLikeCelsius = Math.floor(feels_like);
+    const feelsLikeCelsius = Math.round(feels_like);
     tempFeelsLikeElm.innerText = `${feelsLikeCelsius} °C`;
     if (feelsLikeCelsius >= 28) {
       realFellIconElm.src = "./assets/hot.png";
@@ -252,8 +271,8 @@ const app = {
   },
 
   getForecastOnWeek: async function (
-    lat = this.hcmLatitudeVal,
-    lon = this.hcmLongitudeVal
+    lat = this.currLatitudeVal,
+    lon = this.currLongitudeVal
   ) {
     try {
       const response = await axios.get(
@@ -321,10 +340,10 @@ const app = {
         } = item;
         const weatherData = weather[0];
         const { main: mainStatus, description, icon } = weatherData;
-        const minTempVal = Math.floor(tempMin);
-        const maxTempVal = Math.floor(tempMax);
-        const tempDayVal = Math.floor(tempDay);
-        const tempNightVal = Math.floor(tempNight);
+        const minTempVal = Math.round(tempMin);
+        const maxTempVal = Math.round(tempMax);
+        const tempDayVal = Math.round(tempDay);
+        const tempNightVal = Math.round(tempNight);
         const statusData = app.getStatusWeather(icon);
         const dayname = app.getDayName(dt);
 
@@ -410,6 +429,7 @@ const app = {
     this.handleEvent();
     this.updateWeatherForecast();
     this.handleDarkmode();
+    this.getCurrentLocation();
   },
 };
 app.start();
