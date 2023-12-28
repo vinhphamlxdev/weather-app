@@ -75,70 +75,78 @@ const app = {
     switch (iconCode) {
       case "01d":
         return {
-          icon: "./assets/clear-day.png",
+          icon: "./assets/clouds/clearsky.json",
           desc: "Clear sky during the day. Bright sunlight illuminates the surroundings.",
         };
       case "01n":
         return {
-          icon: "./assets/clear-sky.png",
+          icon: "./assets/clouds/clearskymoon.json",
           desc: "Clear sky at night. Twinkling stars and possibly a moonlit night.",
         };
       case "02d":
         return {
-          icon: "./assets/clouds.png",
+          icon: "./assets/clouds/fewclouds.json",
           desc: "Partly to mostly cloudy sky. Varying degrees of cloud cover.",
         };
       case "02n":
         return {
-          icon: "./assets/few-cloud-night.png",
+          icon: "./assets/clouds/cloudmoon.json",
           desc: "Clear sky, twinkling stars, and a chance of moonlight.",
         };
       case "03d":
       case "03n":
         return {
-          icon: "./assets/clouds.png",
+          icon: "./assets/clouds/cloud.json",
           desc: "Scattered clouds. Pleasant weather with occasional cloud cover.",
         };
       case "04n":
       case "04d":
         return {
-          icon: "./assets/two-cloud.png",
-          desc: "Broken clouds. Intermittent cloud cover with breaks of clear sky.",
+          icon: "./assets/clouds/brokencloud.json",
+          desc: "Overcast skies forecasted, indicating a mostly cloudy day. Expect cooler temperatures and the possibility of scattered light rain.",
         };
 
       case "09d":
       case "09n":
         return {
-          icon: "./assets/rain.png",
+          icon: "./assets/clouds/showerrain.json",
           desc: "Rainy weather. Expect rainfall, ranging from light to heavy.",
         };
       case "10d":
+        return {
+          icon: "./assets/clouds/rainday.json",
+          desc: "Rain expected. Prepare for wet conditions.",
+        };
       case "10n":
         return {
-          icon: "./assets/sunrain.png",
+          icon: "./assets/clouds/rainnight.json",
           desc: "Rain expected. Prepare for wet conditions.",
         };
       case "11d":
       case "11n":
         return {
-          icon: "./assets/thunderstorm.png",
+          icon: "./assets/clouds/storm.json",
           desc: "Thunderstorm. Stormy weather with thunder and lightning.",
         };
       case "13d":
+        return {
+          icon: "./assets/clouds/snowday.json",
+          desc: "Snowfall. Delicate snowflakes covering the landscape.",
+        };
       case "13n":
         return {
-          icon: "./assets/snow.png",
+          icon: "./assets/clouds/snownight.json",
           desc: "Snowfall. Delicate snowflakes covering the landscape.",
         };
       case "50d":
       case "50n":
         return {
-          icon: "./assets/mist.png",
+          icon: "./assets/clouds/mist.json",
           desc: "Misty conditions. Reduced visibility with a damp atmosphere.",
         };
       default:
         return {
-          icon: "./assets/clear-day.png",
+          icon: "./assets/clouds/clearsky.json",
           desc: "Clear sky during the day. Bright sunlight illuminates the surroundings.",
         };
     }
@@ -353,7 +361,10 @@ const app = {
       </div>
       <div class="flex items-center gap-y-2 flex-col">
           <div class="relative">
-            <img class="cloud-image w-10" src="${statusData?.icon}" alt="">
+          <lord-icon
+          trigger="loop"
+          class="cloud-image w-10 h-10" src="${statusData?.icon}"
+                </lord-icon>
           </div>
         <div class="relative">
           <span class="text-2xl font-medium">${tempDayVal}</span>
