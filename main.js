@@ -1,6 +1,6 @@
 const API_KEY = `60836d7502891317b3d0942b4f1d416b`;
 const BASE_API_WEATHER = `https://api.openweathermap.org`;
-const API_PROVINCES = `https://provinces.open-api.vn/api/?depth=2`;
+const API_PROVINCES = `https://vapi.vnappmob.com/api/province`;
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 const dropdownList = $(".dropdown-list");
@@ -19,9 +19,9 @@ const app = {
   getAllAddress: async function () {
     try {
       const response = await axios.get(`${API_PROVINCES}`);
-      if (response && response?.data.length > 0) {
-        this.addressData = response.data;
-        this.renderDropdownItem(response.data);
+      if (response && response?.data?.results?.length > 0) {
+        this.addressData = response.data.results;
+        this.renderDropdownItem(response.data.results);
       }
     } catch (error) {
       console.error("Error when fetching data:", error);
@@ -246,10 +246,8 @@ const app = {
   renderDropdownItem: function (addressData = []) {
     let newAddressArrs = addressData.map((address) => {
       return {
-        code: address.code,
-        name: address.name,
-        codeName: address.codename,
-        phoneCode: address.phone_code,
+        code: address.province_id,
+        name: address.province_name,
       };
     });
     let html = newAddressArrs.map((item) => {
